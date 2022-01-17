@@ -1,4 +1,5 @@
-# vue3_demo
+# vue3_inquiry
+vue3实现询价操作
 
 ## Project setup
 ```
