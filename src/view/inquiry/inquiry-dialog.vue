@@ -42,7 +42,7 @@ Description
 </template>
 
 <script>
-  import { reactive, toRaw, toRefs } from 'vue'
+  import { reactive, toRaw, toRefs, readonly } from 'vue'
   export default {
     name: 'inquiry-dialog',
     props: {
@@ -64,6 +64,8 @@ Description
           annotation: '',
           question_num: '',
         },
+      })
+      const configData = readonly({
         // 无需改变，设为非响应式
         formConfig: [
           {
@@ -152,13 +154,15 @@ Description
         ]
       })
       const getOptionList = (optionListName) => {
-        return toRaw(data[optionListName])
+        console.log(toRaw(configData[optionListName]), optionListName)
+        return toRaw(configData[optionListName])
       }
       const cancel = () => {
       }
       const submit = () => {
       }
       return {
+        ...configData,
         ...toRefs(data),
         getOptionList,
         cancel,
