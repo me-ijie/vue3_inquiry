@@ -1,44 +1,46 @@
 <!--
-Description
+Description 询价弹窗
 @authors meijie (draltracy@msn.cn)
 @date    2022-01-18 03:00:33
 @version 1.0.0
 -->
 <template>
-  <el-dialog
-    :model-value="visible"
-    :width="814"
-    title="运营询价">
-    <el-form ref="form" :model="form" label-suffix="：" label-width="120px" class="form-wrapper">
-      <el-form-item :class="className" :label="label" :prop="prop" :key="prop" v-for="{label, prop, type, placeholder, optionListName, className} in formConfig">
-        <el-input 
-          v-if="type.includes('input')"
-          v-model="form[prop]"
-          :type="type.slice(6)"
-          style="width:100%"
-          :placeholder="placeholder"
-          :row="3"/>
-        <el-select
-          v-if="type === 'select'"
-          v-model="form[prop]"
-          style="width:100%"
-          :placeholder="placeholder">
-          <option v-for="option in getOptionList(optionListName)" 
-            :key="option.id" 
-            :label="option.name"
-            :value="option.id"></option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="submit"
-          >提交运营询价</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
+  <div>
+    <el-dialog
+      :model-value="visible"
+      :width="814"
+      @close="cancel"
+      title="运营询价">
+      <el-form ref="form" :model="form" label-suffix="：" label-width="120px" class="form-wrapper">
+        <el-form-item :class="className" :label="label" :prop="prop" :key="prop" v-for="{label, prop, type, placeholder, optionListName, className} in formConfig">
+          <el-input 
+            v-if="type.includes('input')"
+            v-model="form[prop]"
+            :type="type.slice(6)"
+            style="width:100%"
+            :placeholder="placeholder"
+            :row="3"/>
+          <el-select
+            v-if="type === 'select'"
+            v-model="form[prop]"
+            style="width:100%"
+            :placeholder="placeholder">
+            <el-option v-for="option in getOptionList(optionListName)" 
+              :key="option.id" 
+              :label="option.name"
+              :value="option.id"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="cancel">取消</el-button>
+          <el-button type="primary" @click="submit">提交运营询价</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -52,7 +54,7 @@ Description
       }
     },
     emits: ['update:visible'],
-    setup () {
+    setup (props, ctx) {
       let data = reactive({
         form: {
           method: '',
@@ -129,7 +131,40 @@ Description
             className: 'large'
           },
         ],
-        methodList: [],
+        methodList: [
+          {
+            id: 1,
+            name: 'ezTest'
+          },
+          {
+            id: 2,
+            name: 'ezTalk'
+          },
+          {
+            id: 4,
+            name: 'ezContent'
+          },
+          {
+            id: 7,
+            name: 'SaaS全套服务使用（年单签约）'
+          },
+          {
+            id: 3,
+            name: 'SaaS体验与使用（非年单签约）'
+          },
+          {
+            id: 8,
+            name: 'vTalk'
+          },
+          {
+            id: 6,
+            name: '非调研项目'
+          },
+          {
+            id: 5,
+            name: '快速测试'
+          }
+        ],
         questionCount: [
           {
             id: 0,
@@ -153,11 +188,11 @@ Description
           }
         ]
       })
-      const getOptionList = (optionListName) => {
-        console.log(toRaw(configData[optionListName]), optionListName)
+      const getOptionList = function (optionListName) {
         return toRaw(configData[optionListName])
       }
       const cancel = () => {
+        ctx.emit('update:visible', false)
       }
       const submit = () => {
       }
