@@ -11,7 +11,7 @@ Description 询价弹窗
       :width="814"
       @close="cancel"
       title="运营询价">
-      <el-form ref="form" :model="form" label-suffix="：" label-width="120px" class="form-wrapper">
+      <el-form ref="form" :model="form" :disabled="preview" label-suffix="：" label-width="120px" class="form-wrapper">
         <el-form-item :class="className" :label="label" :prop="prop" :key="prop" v-for="{label, prop, type, placeholder, optionListName, className} in formConfig">
           <el-input 
             v-if="type.includes('input')"
@@ -19,6 +19,7 @@ Description 询价弹窗
             :type="type.slice(6)"
             style="width:100%"
             :placeholder="placeholder"
+            @input="showValue"
             :row="3"/>
           <el-select
             v-if="type === 'select'"
@@ -29,6 +30,10 @@ Description 询价弹窗
               :key="option.id" 
               :label="option.name"
               :value="option.id"></el-option>
+            <template v-if="prop === 'sample_require'">
+              <div v-show="preview" class="el-textarea is-disabled"><p class="el-textarea__inner" style="height:200px;overflow-y:auto;" v-html="form.sample_require"></p></div>
+              <div v-show="!preview" ref="editor" class="wangeditor"></div>
+            </template>
           </el-select>
         </el-form-item>
       </el-form>
@@ -44,17 +49,31 @@ Description 询价弹窗
 </template>
 
 <script>
-  import { reactive, toRaw, toRefs, readonly } from 'vue'
+  import { reactive, ref, toRaw, readonly, watch, onMounted, nextTick } from 'vue'
+  import WangEditor from 'wangeditor'
   export default {
     name: 'inquiry-dialog',
     props: {
       visible: {
         type: Boolean,
         default: false
+      },
+      preview: {
+        type: Boolean,
+        default: false
+      },
+      inquiry: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
     },
     emits: ['update:visible'],
     setup (props, ctx) {
+      // ref 数据
+      let editor = ref(null)
+      // 响应式数据
       let data = reactive({
         form: {
           method: '',
@@ -66,7 +85,9 @@ Description 询价弹窗
           annotation: '',
           question_num: '',
         },
+        inquiryEditor: {}
       })
+      // 只读数据
       const configData = readonly({
         // 无需改变，设为非响应式
         formConfig: [
@@ -88,7 +109,7 @@ Description 询价弹窗
           {
             prop: 'sample_require',
             label: '调研样本要求',
-            type: 'input_textarea',
+            type: '',
             placeholder: '请输入调研样本要求',
             className: 'large'
           },
@@ -188,6 +209,18 @@ Description 询价弹窗
           }
         ]
       })
+      // watch
+      watch(() => props.inquiry,(newVal) => {
+          console.log(newVal, 'inquiry')
+          for (let key in data.form) {
+            data.form[key] = newVal[key]
+            console.log(key, data.form[key])
+          }
+      })
+      watch(() => props.visible, (visible) => {
+        if (visible) console.log(editor, 'editorvisible')
+      })
+      // 方法
       const getOptionList = function (optionListName) {
         return toRaw(configData[optionListName])
       }
@@ -196,10 +229,57 @@ Description 询价弹窗
       }
       const submit = () => {
       }
+
+      const initEditor = () => {
+        data.inquiryEditor = new WangEditor(editor)
+        data.inquiryEditor.config.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'fontSize',  // 字号
+          // 'fontName',  // 字体
+          'italic',  // 斜体
+          'underline',  // 下划线
+          'strikeThrough',  // 删除线
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          'link',  // 插入链接
+          'list',  // 列表
+          'justify',  // 对齐方式
+          // 'quote',  // 引用
+          // 'emoticon',  // 表情
+          'image',  // 插入图片
+          'table',  // 表格
+          // 'video',  // 插入视频
+          // 'code',  // 插入代码
+          'undo',  // 撤销
+          'redo'  // 重复
+        ]
+        data.inquiryEditor.config.showLinkImg = false
+        data.inquiryEditor.config.showFullScreen = false
+        data.inquiryEditor.config.height = 170
+        data.inquiryEditor.config.zIndex = 1
+        let placeholder = '<p>一行一个条件，样本比例或样本数量要求用，隔开,</p><p>示例：</p><p>样本量1500</p><p>1. 25-45岁本地居民</p><p>2. 男:女,40%：60%</p><p>3. 北京：上海，50%：50%</p><p>4. 一线家庭月收入20000元或以上，15%</p><p>5. 羽绒服品牌购买及决策者</p>'
+        data.inquiryEditor.config.placeholder = placeholder
+        data.inquiryEditor.create()
+      }
+
+      const showValue = (val) => {
+        console.log(val, 'input')
+      }
+
+      onMounted(() => {
+        nextTick(() => {
+          console.log(editor, 'editor')
+          initEditor()
+        })
+        console.log(editor, 'editor1')
+      })
       return {
         ...configData,
-        ...toRefs(data),
+        ...data,
+        editor,
         getOptionList,
+        showValue,
         cancel,
         submit
       }

@@ -2,7 +2,7 @@
  * @Description: 询价列表
  * @Date: 2022-01-26 16:26:12
  * @LastEditors: meijie
- * @LastEditTime: 2022-01-26 17:59:14
+ * @LastEditTime: 2022-01-27 13:27:43
  * @FilePath: \vue3_inquiry\src\view\inquiry\inquiry-table.vue
 -->
 <template>
@@ -40,10 +40,10 @@
         <span v-else-if="col.prop === 'final_price'">{{+scope.row.status === 2 ? scope.row.final_price : ''}}</span>
         <span v-else-if="col.prop === 'annotation'">{{scope.row.annotation ? '有' : '-'}}</span>
         <span v-else-if="col.prop === 'action'">
-          <el-button type="text" @click="view(scope.row)" :disabled="saveLoading">查看</el-button>
-          <el-button type="text" @click="copy(scope.row)" :disabled="saveLoading">复制</el-button>
-          <el-button type="text" @click="urge(scope.row)" v-if="+scope.row.status === 1" :disabled="saveLoading">催办</el-button>
-          <el-button type="text" @click="revoke(scope.row)" v-if="+scope.row.status === 1" :disabled="saveLoading">撤回</el-button>
+          <el-button type="text" @click="getInquiry(scope.$index, 'view')" :disabled="saveLoading">查看</el-button>
+          <el-button type="text" @click="getInquiry(scope.$index, 'copy')" :disabled="saveLoading">复制</el-button>
+          <el-button type="text" @click="urge(scope.row.inquiry_id)" v-if="+scope.row.status === 1" :disabled="saveLoading">催办</el-button>
+          <el-button type="text" @click="recall(scope.row.inquiry_id)" v-if="+scope.row.status === 1" :disabled="saveLoading">撤回</el-button>
         </span>
         <span v-else>{{scope.row[col.prop]}}</span>
       </template>
@@ -52,13 +52,15 @@
 </template>
 
 <script>
-  import { reactive, readonly, toRefs } from 'vue'
+  import { getCurrentInstance, onMounted, onUnmounted, reactive, readonly } from 'vue'
   export default {
     name: 'inquiry-table',
-    setup () {
+    emits: ['open'],
+    setup (props, ctx) {
       let data = reactive({
         saveLoading: false,
         list: [{
+          inquiry_id: 1,
           status: 2,
           risk_assess: 1,
           method: 'ezTest',
@@ -142,6 +144,7 @@
           }
         ],
       })
+      const { proxy:_this } = getCurrentInstance()
 
       const getColor = (status) => {
         switch (status) {
@@ -154,10 +157,36 @@
             return '#9AC137'
         }
       }
+
+      const getInquiry = (index, action) => {
+        // console.log('this:', _this.$clone)
+        const inquiry = _this.$clone(data.list[index])
+        const options = { inquiry, action }
+        ctx.emit('open', options)
+      }
+
+      const recall = (id) => {
+        console.log(id)
+      }
+
+      const urge = (id) => {
+        console.log(id)
+      }
+
+      onMounted(() => {
+        console.log('挂载了')
+      })
+
+      onUnmounted(() => {
+        console.log('卸载了')
+      })
       return {
         ...configData,
-        ...toRefs(data),
-        getColor
+        ...data,
+        getColor,
+        getInquiry,
+        recall,
+        urge
       }
     }
   }
