@@ -5,6 +5,7 @@ import 'element-plus/dist/index.css'
 
 const app = createApp(App)
 
+app.config.globalProperties.$clone = require('lodash/cloneDeep')
 app.use(ElementPlus)
 app.mount('#app')
 
