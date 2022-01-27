@@ -2,7 +2,7 @@
  * @Description: 登录/注册页面
  * @Date: 2022-01-27 15:49:13
  * @LastEditors: meijie
- * @LastEditTime: 2022-01-27 18:12:40
+ * @LastEditTime: 2022-01-27 18:17:04
  * @FilePath: \vue3_inquiry\src\views\login\index.vue
 -->
 <template>
@@ -16,12 +16,13 @@
       <label for="pwd">密码：</label>
       <el-input id="pwd" type="password" v-model="pwd" />
     </div>
-    <el-button type="primary" size="small">登录</el-button>
+    <el-button type="primary" size="small" @click="login">登录</el-button>
   </div>
 </template>
 
 <script>
 import { reactive, toRefs } from '@vue/reactivity'
+import { getCurrentInstance } from '@vue/runtime-core'
 export default {
   name: 'login',
   setup () {
@@ -29,8 +30,13 @@ export default {
       name: '',
       pwd: ''
     })
+    const { proxy: _this } = getCurrentInstance()
+    const login = () => {
+      _this.$router.push('/inquiry')
+    }
     return {
-      ...toRefs(data)
+      ...toRefs(data),
+      login
     }
   }
 }
