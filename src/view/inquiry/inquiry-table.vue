@@ -2,7 +2,7 @@
  * @Description: 询价列表
  * @Date: 2022-01-26 16:26:12
  * @LastEditors: meijie
- * @LastEditTime: 2022-01-27 13:27:43
+ * @LastEditTime: 2022-01-27 15:13:07
  * @FilePath: \vue3_inquiry\src\view\inquiry\inquiry-table.vue
 -->
 <template>

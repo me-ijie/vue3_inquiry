@@ -11,7 +11,7 @@ Description 询价弹窗
       :width="814"
       @close="cancel"
       title="运营询价">
-      <el-form ref="form" :model="form" :disabled="preview" label-suffix="：" label-width="120px" class="form-wrapper">
+      <el-form ref="inquiry" :model="form" :disabled="isPreview" label-suffix="：" label-width="120px" class="form-wrapper">
         <el-form-item :class="className" :label="label" :prop="prop" :key="prop" v-for="{label, prop, type, placeholder, optionListName, className} in formConfig">
           <el-input 
             v-if="type.includes('input')"
@@ -19,7 +19,6 @@ Description 询价弹窗
             :type="type.slice(6)"
             style="width:100%"
             :placeholder="placeholder"
-            @input="showValue"
             :row="3"/>
           <el-select
             v-if="type === 'select'"
@@ -31,8 +30,8 @@ Description 询价弹窗
               :label="option.name"
               :value="option.id"></el-option>
             <template v-if="prop === 'sample_require'">
-              <div v-show="preview" class="el-textarea is-disabled"><p class="el-textarea__inner" style="height:200px;overflow-y:auto;" v-html="form.sample_require"></p></div>
-              <div v-show="!preview" ref="editor" class="wangeditor"></div>
+              <div v-show="isPreview" class="el-textarea is-disabled"><p class="el-textarea__inner" style="height:200px;overflow-y:auto;" v-html="form.sample_require"></p></div>
+              <div v-show="!isPreview" ref="editor" class="wangeditor"></div>
             </template>
           </el-select>
         </el-form-item>
@@ -49,7 +48,7 @@ Description 询价弹窗
 </template>
 
 <script>
-  import { reactive, ref, toRaw, readonly, watch, onMounted, nextTick } from 'vue'
+  import { reactive, ref, toRaw, toRefs, readonly, watch, onMounted, nextTick } from 'vue'
   import WangEditor from 'wangeditor'
   export default {
     name: 'inquiry-dialog',
@@ -58,7 +57,7 @@ Description 询价弹窗
         type: Boolean,
         default: false
       },
-      preview: {
+      isPreview: {
         type: Boolean,
         default: false
       },
@@ -211,11 +210,9 @@ Description 询价弹窗
       })
       // watch
       watch(() => props.inquiry,(newVal) => {
-          console.log(newVal, 'inquiry')
-          for (let key in data.form) {
-            data.form[key] = newVal[key]
-            console.log(key, data.form[key])
-          }
+        for (let key in data.form) {
+          data.form[key] = newVal[key]
+        }
       })
       watch(() => props.visible, (visible) => {
         if (visible) console.log(editor, 'editorvisible')
@@ -226,6 +223,9 @@ Description 询价弹窗
       }
       const cancel = () => {
         ctx.emit('update:visible', false)
+        for (let key in data.form) {
+          data.form[key] = ''
+        }
       }
       const submit = () => {
       }
@@ -263,23 +263,17 @@ Description 询价弹窗
         data.inquiryEditor.create()
       }
 
-      const showValue = (val) => {
-        console.log(val, 'input')
-      }
-
       onMounted(() => {
         nextTick(() => {
           console.log(editor, 'editor')
           initEditor()
         })
-        console.log(editor, 'editor1')
       })
       return {
         ...configData,
-        ...data,
+        ...toRefs(data),
         editor,
         getOptionList,
-        showValue,
         cancel,
         submit
       }

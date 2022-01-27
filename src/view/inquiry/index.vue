@@ -1,7 +1,7 @@
 <!--
  * @Author: meijie
  * @Date: 2022-01-18 18:39:56
- * @LastEditTime: 2022-01-27 14:26:28
+ * @LastEditTime: 2022-01-27 15:19:18
  * @LastEditors: meijie
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \vue3_inquiry\src\view\inquiry\index.vue
@@ -20,7 +20,7 @@ Description
     :inquiry="inquiry"
     :visible="dialogVisible"
     @update:visible="updateDialog"
-    v-model="preview"
+    :isPreview="isPreview"
     />
 </template>
 
@@ -37,21 +37,21 @@ Description
     setup () {
       let data = reactive({
         dialogVisible: false,
-        preview: false,
+        isPreview: false,
         inquiry: {}
       })
       let inquiryDialog = ref(null)
       const addInquiry = () => {
-        data.preview = false
+        data.isPreview = false
         data.dialogVisible = true
       }
       const updateDialog = (visible) => {
-        data.preview = false
+        data.isPreview = false
         data.dialogVisible = visible
       }
       const openDialog = (options = {}) => {
         const { inquiry, action } = options
-        data.preview = action === 'view'
+        data.isPreview = action === 'view'
         data.inquiry = inquiry
         data.dialogVisible = true
       }
