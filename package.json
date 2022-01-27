@@ -15,6 +15,7 @@
     "lodash": "^4.17.21",
     "style-resources-loader": "^1.5.0",
     "vue": "^3.0.0",
+    "vue-router": "^4.0.0-beta.13",
     "wangeditor": "^4.0.0"
   },
   "devDependencies": {

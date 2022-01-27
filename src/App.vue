@@ -1,13 +1,12 @@
 <template>
-  <inquiry />
+  <router-view />
 </template>
 
 <script>
-import Inquiry from './view/inquiry/index'
+// import Inquiry from './views/inquiry/index'
 export default {
   name: 'App',
   components: {
-    Inquiry
   }
 }
 </script>
@@ -20,5 +19,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+* {
+  margin: 0;
+  padding: 0;
 }
 </style>
