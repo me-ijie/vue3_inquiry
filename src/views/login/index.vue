@@ -9,8 +9,8 @@
   <div class="login-container">
     <p class="title">登录</p>
     <div class="input">
-      <label for="name">账户：</label>
-      <el-input label="账户：" id="name" v-model="name" />
+      <label for="mobile">手机号：</label>
+      <el-input id="mobile" v-model="mobile" />
     </div>
     <div class="input">
       <label for="pwd">密码：</label>
@@ -27,12 +27,16 @@ export default {
   name: 'login',
   setup () {
     let data = reactive({
-      name: '',
+      mobile: '',
       pwd: ''
     })
     const { proxy: _this } = getCurrentInstance()
-    const login = () => {
-      _this.$router.push('/inquiry')
+    const login = (data) => {
+      // _this.$router.push('/inquiry')
+      _this.$api.login({
+        mobile: data.mobile,
+        pwd: data.pwd
+      })
     }
     return {
       ...toRefs(data),
