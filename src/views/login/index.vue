@@ -63,10 +63,7 @@ export default {
       } finally {
         data.loading = false
       }
-    }
-
-    console.log('env', process.env)
-    
+    }    
 
     return {
       ...toRefs(data),
