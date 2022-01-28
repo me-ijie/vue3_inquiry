@@ -1,11 +1,12 @@
 import axios from 'axios'
+import { ElNotification } from 'element-plus'
 
 const app = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: process.env.VUE_APP_URL,
   timeout: 60000
 })
 
-export default function ajax (type, url, data) {
+export default function ajax (type, url, data = {}) {
 
   return new Promise(function (res, rej) {
     let promise
@@ -27,7 +28,15 @@ export default function ajax (type, url, data) {
 
     promise.then(function (response) {
         // 成功了，调用resolve()
-        res(response.data)
+        if (response.data.code !== 0) {
+          ElNotification({
+            title: '操作失败',
+            message: response.data.msg || '请求错误',
+            type: 'error',
+          })
+          throw new Error()
+        }
+        res(response.data.data)
       })
       .catch(function (error) {
         // 失败了，调用reject()

@@ -2,8 +2,8 @@
  * @Description: 询价列表
  * @Date: 2022-01-26 16:26:12
  * @LastEditors: meijie
- * @LastEditTime: 2022-01-27 15:13:07
- * @FilePath: \vue3_inquiry\src\view\inquiry\inquiry-table.vue
+ * @LastEditTime: 2022-01-28 16:30:01
+ * @FilePath: \vue3_inquiry\src\views\inquiry\inquiry-table.vue
 -->
 <template>
   <el-table
@@ -180,6 +180,22 @@
       onUnmounted(() => {
         console.log('卸载了')
       })
+
+      
+    const initData = async () => {
+      try {
+        data.loading = true
+        const res = await _this.$api.getInquiryList()
+        data.list = res
+      } catch (e) {
+        console.warn(e)
+      } finally {
+        data.loading = false
+      }
+    }
+
+    initData()
+
       return {
         ...configData,
         ...data,

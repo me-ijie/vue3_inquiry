@@ -1,10 +1,10 @@
 <!--
  * @Author: meijie
  * @Date: 2022-01-18 18:39:56
- * @LastEditTime: 2022-01-27 15:19:18
+ * @LastEditTime: 2022-01-28 16:27:39
  * @LastEditors: meijie
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \vue3_inquiry\src\view\inquiry\index.vue
+ * @FilePath: \vue3_inquiry\src\views\inquiry\index.vue
 -->
 <!--
 Description
