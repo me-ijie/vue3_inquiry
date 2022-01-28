@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ElNotification } from 'element-plus'
 
 const app = axios.create({
-  baseURL: process.env.VUE_APP_URL,
+  baseURL: '/api',
   timeout: 60000
 })
 
