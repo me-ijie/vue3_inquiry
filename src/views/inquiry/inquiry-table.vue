@@ -2,7 +2,7 @@
  * @Description: 询价列表
  * @Date: 2022-01-26 16:26:12
  * @LastEditors: meijie
- * @LastEditTime: 2022-01-28 16:30:01
+ * @LastEditTime: 2022-02-09 15:39:01
  * @FilePath: \vue3_inquiry\src\views\inquiry\inquiry-table.vue
 -->
 <template>
@@ -59,19 +59,21 @@
     setup (props, ctx) {
       let data = reactive({
         saveLoading: false,
-        list: [{
-          inquiry_id: 1,
-          status: 2,
-          risk_assess: 1,
-          method: 'ezTest',
-          recovery_time: '2021-01-26 10:27',
-          prediction: 0.7,
-          add_time: '2021-01-25 10:27',
-          confirm_time: '2021-01-26 10:27',
-          annotation: '111',
-          final_price: 500,
-          result: [{annotation: '1'}]
-        }]
+        list: [
+          // {
+          //   inquiry_id: 1,
+          //   status: 2,
+          //   risk_assess: 1,
+          //   method: 'ezTest',
+          //   recovery_time: '2021-01-26 10:27',
+          //   prediction: 0.7,
+          //   add_time: '2021-01-25 10:27',
+          //   confirm_time: '2021-01-26 10:27',
+          //   annotation: '111',
+          //   final_price: 500,
+          //   result: [{annotation: '1'}]
+          // }
+        ]
       })
       const configData = readonly({
         // 无需改变，设为非响应式
@@ -133,7 +135,7 @@
           {
             prop: 'annotation',
             label: '运营批注',
-            width: '96',
+            width: '',
             showOverflow: true
           },
           {
@@ -201,6 +203,7 @@
         ...data,
         getColor,
         getInquiry,
+        initData,
         recall,
         urge
       }
