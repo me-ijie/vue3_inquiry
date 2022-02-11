@@ -32,10 +32,7 @@
           color: [1, 3].includes(scope.row.status) ? '#000000':'#fff',
           background: getColor(scope.row.status)
           }">
-          {{ ['待处理', '已处理', '草稿', '讨论中'][scope.row.status - 1] }}
-        </span>
-        <span v-else-if="col.prop === 'risk_assess'">
-          {{ ['待评估', '低风险', '中风险', '高风险', '不建议执行'][scope.row.risk_assess] }}
+          {{ ['待处理', '已处理', '草稿'][scope.row.status - 1] }}
         </span>
         <span v-else-if="col.prop === 'final_price'">{{+scope.row.status === 2 ? scope.row.final_price : ''}}</span>
         <span v-else-if="col.prop === 'annotation'">{{scope.row.annotation ? '有' : '-'}}</span>
@@ -52,28 +49,14 @@
 </template>
 
 <script>
-  import { getCurrentInstance, onMounted, onUnmounted, reactive, readonly } from 'vue'
+  import { getCurrentInstance, onMounted, onUnmounted, reactive, readonly, toRefs } from 'vue'
   export default {
     name: 'inquiry-table',
     emits: ['open'],
     setup (props, ctx) {
       let data = reactive({
         saveLoading: false,
-        list: [
-          // {
-          //   inquiry_id: 1,
-          //   status: 2,
-          //   risk_assess: 1,
-          //   method: 'ezTest',
-          //   recovery_time: '2021-01-26 10:27',
-          //   prediction: 0.7,
-          //   add_time: '2021-01-25 10:27',
-          //   confirm_time: '2021-01-26 10:27',
-          //   annotation: '111',
-          //   final_price: 500,
-          //   result: [{annotation: '1'}]
-          // }
-        ]
+        list: []
       })
       const configData = readonly({
         // 无需改变，设为非响应式
@@ -87,12 +70,6 @@
           {
             prop: 'status',
             label: '状态',
-            width: '96',
-            showOverflow: false
-          },
-          {
-            prop: 'risk_assess',
-            label: '风险评估',
             width: '96',
             showOverflow: false
           },
@@ -200,7 +177,7 @@
 
       return {
         ...configData,
-        ...data,
+        ...toRefs(data),
         getColor,
         getInquiry,
         initData,

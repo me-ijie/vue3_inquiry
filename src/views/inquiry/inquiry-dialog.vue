@@ -195,23 +195,23 @@ Description 询价弹窗
         ],
         questionCount: [
           {
-            id: 0,
+            id: 1,
             name: '1-10'
           },
           {
-            id: 1,
+            id: 2,
             name: '11-20'
           },
           {
-            id: 2,
+            id: 3,
             name: '21-40'
           },
           {
-            id: 3,
+            id: 4,
             name: '41-60'
           },
           {
-            id: 4,
+            id: 5,
             name: '60以上'
           }
         ]
@@ -241,9 +241,9 @@ Description 询价弹窗
         try {
           data.loading = true
           const inquiry = _this.$clone(data.form)
-          inquiry.method && (inquiry.method = configData.methodList[inquiry.method + 1].name)
-          const res = await _this.$api.add({data: JSON.stringify(inquiry)})
-          console.log('res:', res)
+          inquiry.method && (inquiry.method = configData.methodList[inquiry.method].name)
+          inquiry.question_num && (inquiry.question_num = configData.questionCount[inquiry.question_num].name)
+          await _this.$api.add({data: JSON.stringify(inquiry)})
           _this.$message.success('操作成功！')
           ctx.emit('update:visible', false)
           ctx.emit('updateList')
